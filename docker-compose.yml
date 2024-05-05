@@ -1,5 +1,3 @@
-version: '3'
-
 networks:
   laravel:
 
@@ -29,7 +27,7 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
+      - "33060:3306"
     environment:
       MYSQL_DATABASE: homestead
       MYSQL_USER: homestead
@@ -39,11 +37,13 @@ services:
       SERVICE_NAME: mysql
     networks:
       - laravel
+    volumes:
+      - ./mysql:/var/lib/mysql
 
   php:
     build:
       context: ./dockerfiles
-      dockerfile: php.dockerfile
+      dockerfile: php.debian.dockerfile
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}

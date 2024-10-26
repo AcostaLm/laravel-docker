@@ -1,22 +1,26 @@
 networks:
   laravel:
 
-
 services:
-  frankenphp:
+  app:
     build:
       context: ./dockerfiles
-      dockerfile: frankenphp.dockerfile
-    entrypoint: php artisan octane:frankenphp
+      dockerfile: nginx.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
     ports:
-      - "80:8000"
+      - "80:80"
     volumes:
-      - ./src:/app
-    networks:
-      - laravel
+      - ./src:/var/www/html:delegated
     depends_on:
+      - php
       - redis
       - mysql
+      - mailhog
+    networks:
+      - laravel
+
   mysql:
     image: mariadb:10.6
     restart: unless-stopped

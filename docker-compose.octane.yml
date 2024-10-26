@@ -3,25 +3,20 @@ networks:
 
 
 services:
-  app:
+  frankenphp:
     build:
       context: ./dockerfiles
-      dockerfile: nginx.dockerfile
-      args:
-        - UID=${UID:-1000}
-        - GID=${GID:-1000}
+      dockerfile: frankenphp.dockerfile
+    entrypoint: php artisan octane:frankenphp
     ports:
-      - "80:80"
+      - "80:8000"
     volumes:
-      - ./src:/var/www/html:delegated
-    depends_on:
-      - php
-      - redis
-      - mysql
-      - mailhog
+      - ./src:/app
     networks:
       - laravel
-
+    depends_on:
+      - redis
+      - mysql
   mysql:
     image: mariadb:10.6
     restart: unless-stopped
